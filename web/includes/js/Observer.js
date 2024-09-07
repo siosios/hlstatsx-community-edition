@@ -65,5 +65,5 @@ var Observer = new Class({
 });
 
 var $equals = function(obj1, obj2) {
-	return (obj1 == obj2 || JSON.encode(obj1) == JSON.encode(obj2));
+	return (obj1 == obj2 || JSONMt.encode(obj1) == JSONMt.encode(obj2));
 };

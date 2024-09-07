@@ -129,7 +129,7 @@ var SqueezeBox = {
 		
 		if (this.element && this.options.parse) {
 			var obj = this.element.getProperty(this.options.parse);
-			if (obj && (obj = JSON.decode(obj, this.options.parseSecure))) this.setOptions(obj);
+			if (obj && (obj = JSONMt.decode(obj, this.options.parseSecure))) this.setOptions(obj);
 		}
 		this.url = ((this.element) ? (this.element.get('href')) : subject) || this.options.url || '';
 
