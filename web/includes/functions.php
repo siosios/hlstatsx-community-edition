@@ -281,21 +281,16 @@ function error($message, $exit = true)
  */
 function makeQueryString($key, $value, $notkeys = array())
 {
-	if (!is_array($notkeys)) {
-		$notkeys = array();
+	$params = $_GET;
+	$params[$key] = $value;
+
+	// We remove disabled keys (for example, "page" when changing sorting)
+	foreach ($notkeys as $remove) {
+		unset($params[$remove]);
 	}
 
-	$querystring = '';
-	foreach ($_GET as $k => $v) {
-		$v = valid_request($v, false);
-		if ($k && $k != $key && !in_array($k, $notkeys)) {
-			$querystring .= urlencode($k) . '=' . rawurlencode($v) . '&amp;';
-		}
-	}
-
-	$querystring .= urlencode($key) . '=' . urlencode($value);
-
-	return $querystring;
+	// Building a query string
+	return http_build_query($params);
 }
 
 //
