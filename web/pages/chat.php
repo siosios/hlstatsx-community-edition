@@ -95,6 +95,15 @@ For support and installation notes visit http://www.hlxcommunity.com
 		);
 		$servername = "(" . $result['name'] . ")";
 	}
+
+	$delaySql = "";
+	$delayChat = (int)CHAT_DELAY_TIME;
+	$delayChatSafeHtml = htmlspecialchars($delayChat, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+	if ($delayChat > 0 && $delayChat <= 15) {
+		$delayChatSafeSql = $db->escape($delayChat);
+		$delaySql = "AND `eventTime` <= (NOW() - INTERVAL {$delayChatSafeSql} MINUTE)";
+	}
 ?>
 
 <div class="block">
@@ -167,6 +176,11 @@ For support and installation notes visit http://www.hlxcommunity.com
 				<input type="submit" value="View" class="smallsubmit" />
 			</form>
 			</span>
+			<?php if (!empty($delaySql)) : ?>
+				<div style="font-size:0.9em; color:#8d90a3; margin-top:10px;">
+					*Messages are delayed by <?=$delayChatSafeHtml;?> minutes to prevent real-time tracking.
+				</div>
+			<?php endif ?>
 		</div>
 	</div>
 	<div style="clear:both;padding-top:20px;"></div>
@@ -286,6 +300,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 					hlstats_Servers.serverId = hlstats_Events_Chat.serverId
 				WHERE
 					$whereclause $whereclause2
+				{$delaySql}
 				ORDER BY
 					hlstats_Events_Chat.id $table->sortorder
 				LIMIT
@@ -318,7 +333,9 @@ For support and installation notes visit http://www.hlxcommunity.com
 					hlstats_Servers.serverId = hlstats_Events_Chat.serverId
 				WHERE
 					$whereclause $whereclause2
+				{$delaySql}
 			");
+
 			if ($db->num_rows() < 1) $numitems = 0;
 			else 
 			{
