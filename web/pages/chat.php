@@ -99,7 +99,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 
 	$delaySql = "";
 	$delayChat = (int)CHAT_DELAY_TIME;
-	$delayChatSafeHtml = htmlspecialchars($delayChat, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
 	if ($delayChat > 0 && $delayChat <= CHAT_DELAY_MAX_TIME) {
 		$delayChatSafeSql = $db->escape($delayChat);
@@ -107,7 +106,7 @@ For support and installation notes visit http://www.hlxcommunity.com
 	}
 
 	$serversList = getServersByGame($db, $checkGame);
-	$filter = isset($_REQUEST['filter']) ? $_REQUEST['filter'] : "";
+	$filter = getChatFilterParam();
 
 	// Functions
 	// Old limit 50
@@ -175,13 +174,13 @@ For support and installation notes visit http://www.hlxcommunity.com
 					<?php endforeach; ?>
 				</select>
 
-				Filter: <input type="text" name="filter" value="<?php echo htmlentities($filter); ?>" /> 
+				Filter: <input type="text" name="filter" value="<?=eHtml($filter); ?>" /> 
 				<input type="submit" value="View" class="smallsubmit" />
 			</form>
 			</span>
 			<?php if (!empty($delaySql)) : ?>
 				<div style="font-size:0.9em; color:#8d90a3; margin-top:10px;">
-					*Messages are delayed by <?=$delayChatSafeHtml;?> minutes to prevent real-time tracking.
+					*Messages are delayed by <?=eHtml($delayChat);?> minutes to prevent real-time tracking.
 				</div>
 			<?php endif; ?>
 		</div>
@@ -274,14 +273,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 					"sortorder"
 				);
 			}
-			$whereclause2='';
 
-			if(!empty($filter))
-			{
-				$whereclause2="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
-			}
-
-			$surl = $g_options['scripturl'];
+			$whereclause2 = buildSearchSqlSafe($db, $filter);
 
 			$result = $db->query
 			("
