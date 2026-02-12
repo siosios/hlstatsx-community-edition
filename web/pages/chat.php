@@ -52,7 +52,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 		$whereclause = "hlstats_Servers.game='$game' AND hlstats_Events_Chat.serverId=$showserver";
 	}
 
-	$db->query("
+	$db->query
+	("		
 		SELECT
 			hlstats_Games.name
 		FROM
@@ -116,29 +117,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 				<input type="hidden" name="game" value="<?php echo $game; ?>" />
 				<strong>&#8226;</strong> Show Chat from
 				<?php
-/*
-					$result = $db->query
-					("
-						SELECT
-							DISTINCT hlstats_Events_Chat.serverId,
-							hlstats_Servers.name
-						FROM
-							hlstats_Events_Chat
-						INNER JOIN
-							hlstats_Servers
-						ON
-							hlstats_Events_Chat.serverId = hlstats_Servers.serverId
-							AND hlstats_Servers.game='$game'
-						ORDER BY
-							hlstats_Servers.sortorder,
-							hlstats_Servers.name,
-							hlstats_Events_Chat.serverId ASC
-						LIMIT
-							0,
-							50
-					");
-*/
-
 					$result = $db->query
 					("
 						SELECT
@@ -158,12 +136,8 @@ For support and installation notes visit http://www.hlxcommunity.com
 					");
 
 					echo '<select name="server_id"><option value="0">All Servers</option>';
-					$dates = array ();
-					$serverids = array();
 					while ($rowdata = $db->fetch_array())
 					{
-						$serverids[] = $rowdata['serverId'];
-						$dates[] = $rowdata; 
 						if ($showserver == $rowdata['serverId'])
 							echo '<option value="'.$rowdata['serverId'].'" selected>'.$rowdata['name'].'</option>';
 						else
@@ -272,10 +246,12 @@ For support and installation notes visit http://www.hlxcommunity.com
 				);
 			}
 			$whereclause2='';
+
 			if(!empty($filter))
 			{
 				$whereclause2="AND MATCH (hlstats_Events_Chat.message) AGAINST ('" . $db->escape($filter) . "' in BOOLEAN MODE)";
 			}
+
 			$surl = $g_options['scripturl'];
 
 			$result = $db->query
@@ -307,15 +283,6 @@ For support and installation notes visit http://www.hlxcommunity.com
 					$table->startitem,
 					$table->numperpage;
 			", true, false);
-/*
-    			$whereclause = "hlstats_Events_Chat.serverId ";
-
-			if($showserver == 0) {
-				$whereclause .= "in (".implode($serverids,',').")";
-			} else {
-				$whereclause .= "= $showserver";
-			}
-*/
 
 			$db->query
 			("
