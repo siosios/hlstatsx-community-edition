@@ -567,13 +567,6 @@ function getImage($filename)
     return false;
 }
 
-function mystripslashes($text)
-{
-	// Deprecated, throws an warning in php 7.4 and above
-	// return get_magic_quotes_gpc() ? stripslashes($text) : $text;
-	return $text;
-}
-
 function getRealGame($game)
 {
 	global $db;
@@ -597,7 +590,8 @@ function getJSText($js)
 	return "\t<script type=\"text/javascript\" src=\"".INCLUDE_PATH."/js/$js.js\"></script> \n";
 }
 
-function get_player_rank($playerdata) {
+function get_player_rank($playerdata)
+{
 	global $db, $g_options;
 	
 	$rank = 0;
