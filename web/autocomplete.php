@@ -40,7 +40,7 @@
 		'charset'  => DB_CHARSET,
 	]);
 
-	$pdoClass = new PDODriver($dbOptions);
+	$pdoClass = new PDODriver($dbOptions, $logger);
 	$pdo = $pdoClass->getPDO();
 
 	// Filter game input

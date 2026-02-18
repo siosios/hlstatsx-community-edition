@@ -46,17 +46,18 @@
     use Utils\Logger;
 
     $logger = new Logger();
+
     // Create db class
     $dbOptions = new DatabaseOptions([
-            'host'     => DB_ADDR,
-            'user'     => DB_USER,
-            'pass'     => DB_PASS,
-            'name'     => DB_NAME,
-            'pconnect' => DB_PCONNECT,
-            'charset'  => DB_CHARSET,
+        'host'     => DB_ADDR,
+        'user'     => DB_USER,
+        'pass'     => DB_PASS,
+        'name'     => DB_NAME,
+        'pconnect' => DB_PCONNECT,
+        'charset'  => DB_CHARSET,
     ]);
 
-    $pdoClass = new PDODriver($dbOptions);
+    $pdoClass = new PDODriver($dbOptions, $logger);
     $pdo = $pdoClass->getPDO();
 
     $gameRepo = new GameRepository($pdo, $logger);
