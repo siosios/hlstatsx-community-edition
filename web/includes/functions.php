@@ -203,20 +203,29 @@ function timestamp_to_str($seconds)
  * @param bool $exit
  * @return void
  */
-function error($message, $exit = true)
+function error(string $message, bool $exit = true) : void
 {
-	global $g_options;
-?>
-<table border="1" cellspacing="0" cellpadding="5">
-<tr>
-<td class="errorhead">ERROR</td>
-</tr>
-<tr>
-<td class="errortext"><?php echo $message; ?></td>
-</tr>
-</table>
-<?php if ($exit)
-		exit;
+    $html = '<table style="border:1px solid red;padding:1em;margin:1em;background:#fee;">';
+
+    $html .= '<thead style="text-align:center; color:#673636;">';
+    $html .= '<tr>';
+    $html .= '<td class="errorhead">ERROR</td>';
+    $html .= '</tr>';
+    $html .= '</thead>';
+
+    $html .= '<tbody>';
+    $html .= '<tr>';
+    $html .= '<td class="errortext">' . eHtml($message) . '</td>';
+    $html .= '</tr>';
+    $html .= '</tbody>';
+
+    $html .= '</table>';
+
+    echo $html;
+
+    if ($exit) {
+        exit;
+    }
 }
 
 
