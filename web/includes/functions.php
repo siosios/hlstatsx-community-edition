@@ -40,26 +40,7 @@ if (!defined('IN_HLSTATS')) {
 	die('Do not access this file directly.');
 }
 
-function getGamesList($db)
-{
-	static $gameCodes = null;
-	if ($gameCodes === null) {
-		$gameCodes = [];
-		$result = $db->query("SELECT code FROM hlstats_Games WHERE hidden = '0'");
-
-		if (!$result) {
-			return $gameCodes;
-		}
-
-		while ($row = $db->fetch_row($result)) {
-			$gameCodes[] = $row[0];
-		}
-	}
-
-	return $gameCodes;
-}
-
-function checkValidGame($db, $gameStr, &$retError)
+function checkValidGame(string $gameStr, array $allowedGames, ?string &$retError) : bool
 {
 	// Not object and array
 	if (!is_string($gameStr)) {
@@ -79,8 +60,7 @@ function checkValidGame($db, $gameStr, &$retError)
 		return false;
 	}
 
-	$allowedGames = getGamesList($db);
-	if (!is_array($allowedGames)) {
+	if (!is_array($allowedGames) || empty($allowedGames)) {
 		$retError = 'Failed to get list of allowed games.';
 		return false;
 	}
