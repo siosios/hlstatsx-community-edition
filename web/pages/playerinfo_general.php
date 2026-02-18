@@ -161,19 +161,21 @@ For support and installation notes visit http://www.hlxcommunity.com
 						?>
 					</td>
 				</tr>
+
 				<tr class="bg2">
 					<td>E-mail Address:</td>
+
 					<td>
-						<?php
-							if ($email = getEmailLink($playerdata['email']))
-							{
-								echo $email;
-							}
-							else
-								echo "(<a href=\"" . $g_options['scripturl'] . '?mode=help#set"><em>Not Specified</em></a>)';
-						?>
+						<?php $emailLinkSafe = getEmailLink($playerdata['email']); ?>
+
+                        <?php if (!empty($emailLinkSafe)) : ?>
+                            <?=$emailLinkSafe;?>
+                        <?php else : ?>
+                            (<a href="<?=eHtml($g_options['scripturl']);?>?mode=help#set"><em>Not Specified</em></a>)
+                        <?php endif; ?>
 					</td>
 				</tr>
+
 				<tr class="bg1">
 					<td>Home Page:</td>
 					<td>
@@ -187,19 +189,22 @@ For support and installation notes visit http://www.hlxcommunity.com
 						?>
 					</td>
 				</tr>
+
 				<tr class="bg2">
-                                        <td>MM Rank:</td>
-                                        <td>
-                                                <?php
-                                                        if ($playerdata['mmrank'])
-                                                        {
-                                                                echo '<img src=hlstatsimg/mmranks/' . $playerdata['mmrank'] . '.png alt="rank" style=\"height:20px;width:50px; />';
-                                                        }
-                                                        else
-								echo '<img src=hlstatsimg/mmranks/0.png alt="rank" style=\"height:20px;width:50px; />';
-                                                ?>
-                                        </td>
-                                </tr>
+                        <td>MM Rank:</td>
+
+                        <td>
+                            <?php
+                                if ($playerdata['mmrank'])
+                                {
+                                        echo '<img src=hlstatsimg/mmranks/' . $playerdata['mmrank'] . '.png alt="rank" style=\"height:20px;width:50px; />';
+                                }
+                                else
+                                echo '<img src=hlstatsimg/mmranks/0.png alt="rank" style=\"height:20px;width:50px; />';
+                            ?>
+                        </td>
+                </tr>
+
 				<tr class="bg1">
 					<td>Last Connect:*</td>
 					<td>
