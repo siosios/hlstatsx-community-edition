@@ -36,12 +36,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 For support and installation notes visit http://www.hlxcommunity.com
 */
 
+    // Player Details
     if (!defined('IN_HLSTATS')) {
         die('Do not access this file directly.');
     }
 
-	// Player Details
-	
+    $container = require ROOT_PATH . '/bootstrap.php';
+    $playerRepo = $container->get(\Repository\PlayerRepository::class);
+
 	$player = valid_request(intval($_GET['player']), true);
 	$uniqueid  = valid_request(strval($_GET['uniqueid']), false);
 	$game = valid_request(strval($_GET['game']), false);
@@ -166,18 +168,32 @@ For support and installation notes visit http://www.hlxcommunity.com
 		</tr>
 		<tr class="bg1">
 			<td style="width:45%;" class="fSmall">Rank:</td>
-			<td colspan="2" style="width:55%;" class="fSmall"><?php
-				if ($playerdata['activity'] > 0) {            
-					$rank = get_player_rank($playerdata);
-				} else {
-					$rank = 'Not active';
-				}
+			<td colspan="2" style="width:55%;" class="fSmall">
+                <?php
+                    $rank = 'Unknown';
 
-				if (is_numeric($rank))
-					echo '<strong>' . number_format($rank) . '</strong>';
-				else
-					echo "<strong>$rank</strong>";
-			?></td>
+                    if ($playerdata['activity'] > 0) {
+                        $plGame = $playerdata['game'];
+                        $rankType = $g_options['rankingtype'];
+                        $plValue = $playerdata[$rankType];
+                        $plKills = $playerdata['kills'];
+                        $playerDeaths = $playerdata['deaths'];
+
+                        $rank = $playerRepo->getPlayerRank($plGame, $rankType, $plValue, $plKills, $playerDeaths);
+
+                        if (is_null($rank)) {
+                            $rank = 'Unknown';
+                        }
+                    } else {
+                        $rank = 'Not active';
+                    }
+
+                    if (is_numeric($rank))
+                        echo '<strong>' . number_format($rank) . '</strong>';
+                    else
+                        echo "<strong>$rank</strong>";
+                ?>
+            </td>
 		</tr>
 		<tr class="bg2">
 			<td class="fSmall">Points:</td>
